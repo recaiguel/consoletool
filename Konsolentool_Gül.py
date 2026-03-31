@@ -320,8 +320,45 @@ def palindrom():
 
 ########################################################################################################################################
 
-def anagram():
-    print("=== Anagram ===")
+def anagramm():
+    while True:
+        print("=== Anagramm ===")
+
+        # User Eingabe welches Wort geprüft werden soll
+        check_word = input("Gib ein Wort ein, dass du prüfen möchtest.\n").lower()
+
+        # Anzahl der Anagramme
+        anzahl_anagramm = int(input("Gib an wie viele Anagramme ausgegeben werden sollen.\n"))
+
+        # deklariert leere liste in der die Anagramme hinzugefügt werden 
+        anagramm_list = []
+
+        # Schleife für die geewünschte Anzahl an Anagrammen
+        for i in range(anzahl_anagramm):
+
+            # erstellt eine Liste der Buchstaben des eingegebenen Wortes
+            char_list = []
+
+            for j in check_word:
+                char_list.append(j)
+            random.shuffle(char_list) # mischt die Buchstaben
+            
+            # deklariert neue Variable in der die Buchstaben aus char_list zusammengefügt werden
+            anagramm_wort = "".join(char_list)
+            
+            # fügt das neugemischte wort der anagramm_list hinzu
+            anagramm_list.append(anagramm_wort)
+        
+        # Ausgabe der Liste
+        print(anagramm_list)
+
+
+        # Abfrage ob man ein weiteres Wort prüfen möchte
+        check_again = input("Möchtest du ein weiteres Wort prüfen? Y/N\n")
+        if check_again.lower() != "y": # Alles was kein "Y" oder "y" ist beendet die schleife
+            break # zum beenden der Schleife
+        else:
+            continue # y bringt uns zum Anfang der Schleife
 
 ########################################################################################################################################
 
@@ -369,7 +406,7 @@ def hauptmenu():
         elif eingabe == "8":
             palindrom()
         elif eingabe == "9":
-            anagram()
+            anagramm()
         else:
             print("Ungültige Eingabe")
 hauptmenu()

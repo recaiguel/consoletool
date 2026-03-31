@@ -233,25 +233,40 @@ def anagram():
     while 1:
         print("=== Anagram ===")
 
-        check_word = input("Gib ein Wort ein, dass du prüfen möchtest.\n")
-        # woerterbuch = open( "r")
+        # User Eingabe welches Wort geprüft werden soll
+        check_word = input("Gib ein Wort ein, dass du prüfen möchtest.\n").lower()
 
-        # erstellt eine Liste
-        char_list = []
-        # fügt jede einzelne Buchstabe der Liste hinzu
-        for i in check_word:
-            char_list += i
-        print(char_list)
+        # Anzahl der Anagramme
+        anzahl_anagram = int(input("Gib an wie viele Anagramme ausgegeben werden sollen.\n"))
 
-        """for line in woerterbuch:
-            if check_word.upper() == line.upper():
-                print(line) """
+        # deklariert leere liste in der die Anagramme hinzugefügt werden 
+        anagramm_list = []
+
+        # Schleife für die geewünschte Anzahl an Anagrammen
+        for i in range(anzahl_anagram):
+
+            # erstellt eine Liste der Buchstaben des eingegebenen Wortes
+            char_list = []
+
+            for j in check_word:
+                char_list.append(j)
+            random.shuffle(char_list) # mischt die Buchstaben
+            
+            # deklariert neue Variable in der die Buchstaben aus char_list zusammengefügt werden
+            anagramm_wort = "".join(char_list)
+            
+            # fügt das neugemischte wort der anagramm_list hinzu
+            anagramm_list.append(anagramm_wort)
+        
+        # Ausgabe der Liste
+        print(anagramm_list)
+
 
         # Abfrage ob man ein weiteres Wort prüfen möchte
         check_again = input("Möchtest du ein weiteres Wort prüfen? Y/N\n")
         if check_again.lower() != "y": # Alles was kein "Y" oder "y" ist beendet die schleife
             break # zum beenden der Schleife
         else:
-            continue # y bring uns zum Anfang der Schleife
+            continue # y bringt uns zum Anfang der Schleife
 
 anagram()
