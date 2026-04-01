@@ -38,7 +38,7 @@ def taschenrechner():
             if operand2 == 0:
                 try:
                     operand2 = float(input("Division durch 0 nicht möglich. Nimm eine Zahl außer 0:\n"))
-                except ValueError, ZeroDivisionError:
+                except (ValueError, ZeroDivisionError, TypeError):
                     print("Ungültige Eingabe oder wieder 0 eingegeben!\nFang nochmal von vorne an!\n")
                     print()
                 continue
@@ -52,11 +52,13 @@ def taschenrechner():
 
         # Abfrage ob weiter gerechnet werden soll
         calc_again = input("Möchtest du eine weitere berechnung durchführen? y/n: ")
-        if calc_again.lower() == "y": # startet wieder den Taschenrechner
-            taschenrechner()
+        if calc_again.lower() != "y": # alles andere bringt uns zurück zum Hauptmenü
+            break
 
-        else: # alles andere bringt uns zurück zum Hauptmenü
-            hauptmenu()
+        else:  # startet wieder den Taschenrechner
+            print()
+            continue
+
 ########################################################################################################################################
 
 def bmi_rechner():
@@ -98,17 +100,19 @@ def bmi_rechner():
 
         # Abfrage ob weiter gerechnet werden soll
         calc_again = input("Möchtest du eine weitere berechnung durchführen? y/n: ")
-        if calc_again.lower() == "y": # startet wieder den BMI-Rechner
-            bmi_rechner()
+        if calc_again.lower() != "y": # bringt uns zurück zum Hauptmenü 
+            break
 
-        else: # bringt uns zurück zum Hauptmenü
-            hauptmenu()
+        else: # startet wieder den BMI-Rechner
+            print()
+            continue
+
 ########################################################################################################################################
 
 def papier_stein_schere():
     while True:
         print("=== Papier-Stein-Schere ===")
-
+        print()
         # Liste der möglichen Handzeichen
         handzeichen_in_worte = ["stein", "papier", "schere"]
 
@@ -116,16 +120,25 @@ def papier_stein_schere():
         com_choice = random.choice(handzeichen_in_worte) 
 
         # Eingabe des Benutzers
-        user_choice = input("Stein, Papier oder Schere?\n")
+        user_choice = input("Stein, Papier oder Schere?\n\n")
+        user_choice = user_choice.lower()
+        print()
+        
+        # springt zurück zum anfang des moduls wenn was anderes eingegeben wird als das was in der liste steht
+        if user_choice not in handzeichen_in_worte:
+            print("Du hast 'Stein', 'Papier' oder 'Schere' zur Auswahl!\n")
+            continue
+        else:
+            # Zeige die Eingabe vom Gegner
+            print(f"{user_choice} gegen {com_choice}")
+            print()
 
-        # Zeige die Eingabe vom Gegner
-        print(com_choice)
-
-        # Wenn Gegner und Benutzer den selben Handzeichen haben unentschieden
+        # Wenn Gegner und Benutzer den selben Handzeichen haben : Unentschieden
         if user_choice == com_choice:
              print("Unentschieden")
              gewinner = "Keiner"
         
+        # Verzweigung wer wann gewinnt
         elif user_choice != com_choice:
             if user_choice == "stein" and com_choice == "papier":
                 gewinner = "Computer"
@@ -149,13 +162,16 @@ def papier_stein_schere():
                 print("Ungültige Eingabe!")
 
         print(f"{gewinner} gewinnt diese Runde!")
+        print()
 
         # Abfrage ob man noch weiter spielen möchte
         play_again = input("Möchtest du noch eine Runde spielen? y/n:\n")
         if play_again != "y":
             break
         else:
+            print()
             continue 
+
 ########################################################################################################################################
 
 def zufallsnamen():
@@ -187,8 +203,14 @@ def zufallsnamen():
         "ka", "ke", "ki", "ko", "ku", "pa", "pe", "pi", "po", "pu"
         ]
 
-        anzahl_wörter = int(input("Wie viele Wörter möchtest du generieren?\n"))
-        anzahl_silben = int(input("Wie viele Silben möchtest du haben?\n"))
+        try:
+            anzahl_wörter = int(input("Wie viele Wörter möchtest du generieren?\n\n"))
+            print()
+            anzahl_silben = int(input("Wie viele Silben möchtest du haben?\n\n"))
+        except ValueError:
+            print()
+            print("gib hier einfach nur ganze Zahle ein. Bitte!\n\n")
+            continue
 
         fantasie_wort = ""
 
@@ -210,6 +232,7 @@ def zufallsnamen():
         if create_more.lower() != "y":
             break
         else:
+            print()
             continue
 
 ########################################################################################################################################
@@ -326,6 +349,7 @@ def hangman():
 
         # speichert zufälliges wort aus woerter_liste
         secret_word = random.choice(woerter_liste)
+        secret_word = secret_word.lower()
         #print(secret_word)
 
         # Ersetze die wörter durch "_"
@@ -372,7 +396,7 @@ def hangman():
 
                 print(" ".join(display_word)) # Ausgabe des secret_word wie es aktuell aussieht
             
-            elif len(guess) > 1: # wenn guess/eingabe aus mehreren Buchstaben besteht
+            elif len(guess) > 1 and guess.isalpha(): # wenn guess/eingabe aus mehreren Buchstaben besteht
                 if guess.lower() == secret_word.lower():
                     display_word = guess
                     print(f"Leben: {lives}") # Anzeigen von übrigen Leben
@@ -384,7 +408,7 @@ def hangman():
                     print(hangman_status[lives])
 
             else:
-                print("Ich kann so nicht arbeiten!!!") 
+                print("Ich kann so nicht arbeiten!") 
 
         if "".join(display_word) == secret_word.lower():
             print("Glückwunsch, du hast das Wort rausgefunden\n")
@@ -394,7 +418,7 @@ def hangman():
         play_again = input("Möchtest du noch eine Runde Spielen? (y/n): \n")
 
         if play_again.lower() != "y":
-            print("--- Spiel beendet. Seite neu laden um erneut zu spielen. ---")
+            print("--- Spiel beendet. ---")
             break
         else:
             play_again.lower() == "y"
@@ -407,23 +431,53 @@ def zahlenraten():
     while True:
         print("=== Zahlenraten ===")
         print()
-        # Zufällige Zahl zwischen 1 und 100 in einer Variable
-        random_number = random.randint(1, 100)
+
+        try:
+            # Zufällige Zahl zwischen zwei Usereingaben in einer Variable
+            random_number = random.randint(int(input("Niedrigste Zahl: ")), int(input("Höchste Zahl: ")))
+        except ValueError:
+            print("Ungültiger Wert. Bitte nur Zahlen eingeben!\n")
+            continue
+        
+        # prüft ob die zufällige Zahl ein Integer ist
+        if not isinstance(random_number, int):
+            print("Bitte nur Ganzzahlen eingeben. Danke!\n")
+            continue
+
+        guessed_numbers = []
+
         guess = 0
+
         trys = 0
 
         while guess != random_number:
+            
+            # trys zählt die Versuche
             trys += 1
-            guess = int(input("Errate die zufällige Zahl indem du eine Zahl zwischen 1 und 100 eingibst:\n"))
-            print()
-            if guess < random_number:
-                print("Zu niedrig!")
-            elif guess > random_number:
-                print("Zu hoch!")        
+            try:
+                # guess speichert den wert der eingabe
+                guess = int(input("Errate die zufällige Zahl in der von dir angegeben Range:\n"))
+                print()
+            except ValueError:
+                print("Du musst schon eine Zahl eingeben.")
+                continue
+
+            if guess not in guessed_numbers:
+                
+                guessed_numbers.append(guess)
+
+                if guess < random_number:
+                    print("Zu niedrig!\n")
+                elif guess > random_number:
+                    print("Zu hoch!\n")        
         
+            else:
+                print("Diese Zahl hast du schon versucht.\n")
+
         # Wenn geratene Zahl gleich zufällige Zahl ist hat mann gewonnen
         if guess == random_number:
             print(f"Richtig. Du hast die Zahl erraten: {guess}")
+            print()
             print(f"Du hast {trys} Versuche gebraucht.")
 
         # Abfrage ob man noch weiter spielen möchte
@@ -431,15 +485,21 @@ def zahlenraten():
         if play_again.lower() != "y":
             break
         else:
+            print()
             continue
+
 ########################################################################################################################################
 
 def wuerfelsimulator():
     while True:
         print("=== Würfelsimulator ===")
 
-        anzahl_wuerfel = int(input("Wie viele würfel möchtest du werfen? \n"))
-        anzahl_seiten = int(input("Wie viele Seiten haben die Würfel?\n"))
+        try:
+            anzahl_wuerfel = int(input("Wie viele würfel möchtest du werfen? \n"))
+            anzahl_seiten = int(input("Wie viele Seiten haben die Würfel?\n"))
+        except (ValueError, TypeError):
+            print("Hier funktionieren nur ganze Zahlen.\nAlso nochmal von vorn.\n")
+            continue
 
         ergebnisse = []
 
@@ -454,6 +514,7 @@ def wuerfelsimulator():
         if play_again.lower() != "y":
             break
         else:
+            print()
             continue
 
 ########################################################################################################################################
@@ -489,6 +550,7 @@ def glueckskeks():
         if play_again.lower() != "y":
             break # beendet die Schleife
         else:
+            print()
             continue # Springt zum Anfang der Schleife
 
 ########################################################################################################################################
@@ -496,12 +558,22 @@ def glueckskeks():
 def palindrom():
     while True:
         print("=== Palindrom ===")
+        print()
 
-        check_palindrom = input("Gib ein Wort ein, dass du prüfen möchtest.\n")
-        
+        # Eingabe des Wortes das geprüft werden soll
+        check_palindrom = str(input("Gib ein Wort ein, dass du prüfen möchtest.\n"))
+        print()
+
+        # Wenn die Eingabe Zahlen enthält startet die Schleife neu   
+        if not check_palindrom.isalpha():
+            print("Das ist keine gültige Eingabe.")
+            print()
+            continue
+
         # check_palindrom wird hier direkt umgedreht und ausgegeben
         check_reversed = check_palindrom[::-1]
-        print(check_reversed)
+        print(f"{check_reversed} ist dein Wort rückwärts geschrieben.")
+        print()
 
         # wandelt das wort in Kleinbuchstaben um und prüft ob es ein Palindrom ist 
         if check_palindrom.lower() == check_reversed.lower():
@@ -514,6 +586,7 @@ def palindrom():
         if check_again.lower() != "y": # Alles was kein "Y" oder "y" ist beendet die schleife
             break # zum beenden der Schleife
         else:
+            print()
             continue # y bring uns zum Anfang der Schleife
 
 ########################################################################################################################################
@@ -521,12 +594,25 @@ def palindrom():
 def anagramm():
     while True:
         print("=== Anagramm ===")
+        print()
 
-        # User Eingabe welches Wort geprüft werden soll
-        check_word = input("Gib ein Wort ein, dass du prüfen möchtest.\n").lower()
+        # User Eingabe welches auf Anagramme geprüft werden soll
+        check_anagram = input("Gib ein Wort ein, dass du prüfen möchtest.\n")
+        check_anagram = check_anagram.lower()
 
-        # Anzahl der Anagramme
-        anzahl_anagramm = int(input("Gib an wie viele Anagramme ausgegeben werden sollen.\n"))
+        # Wenn die Eingabe Zahlen enthält startet die Schleife neu   
+        if not check_anagram.isalpha():
+            print("Das ist keine gültige Eingabe.")
+            print()
+            continue
+
+        try:
+            # Anzahl der Anagramme
+            anzahl_anagramm = int(input("Gib an wie viele Anagramme ausgegeben werden sollen.\n"))
+        except ValueError:
+            print("Hier ist nach Anzahl gefragt. Nochmal von vorn.\n")
+            print()
+            continue
 
         # deklariert leere liste in der die Anagramme hinzugefügt werden 
         anagramm_list = []
@@ -534,12 +620,13 @@ def anagramm():
         # Schleife für die geewünschte Anzahl an Anagrammen
         for i in range(anzahl_anagramm):
 
-            # erstellt eine Liste der Buchstaben des eingegebenen Wortes
+            # Leere Liste für die Buchstaben des eingegebenen Wortes
             char_list = []
 
-            for j in check_word:
+            # Hier werden die Buchstaben in die Liste hinzugefügt und gemischt
+            for j in check_anagram:
                 char_list.append(j)
-            random.shuffle(char_list) # mischt die Buchstaben
+            random.shuffle(char_list) 
             
             # deklariert neue Variable in der die Buchstaben aus char_list zusammengefügt werden
             anagramm_wort = "".join(char_list)
@@ -556,6 +643,7 @@ def anagramm():
         if check_again.lower() != "y": # Alles was kein "Y" oder "y" ist beendet die schleife
             break # zum beenden der Schleife
         else:
+            print()
             continue # y bringt uns zum Anfang der Schleife
 
 ########################################################################################################################################
@@ -578,7 +666,7 @@ def hauptmenu():
         print("[6] Würfelsimulator")
         print("[7] Glückskeks")
         print("[8] Palindrom")
-        print("[9] Anagram")
+        print("[9] Anagramm")
         print("==================================")
         print()
 
