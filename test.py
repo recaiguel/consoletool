@@ -226,10 +226,7 @@ glueckskeks() """
 
 palindrom() """
 
-
-
-
-def anagram():
+""" def anagram():
     while 1:
         print("=== Anagram ===")
 
@@ -269,4 +266,193 @@ def anagram():
         else:
             continue # y bringt uns zum Anfang der Schleife
 
-anagram()
+anagram() """
+
+def hangman():
+    while True:
+        print("=== Hangman ===")
+        print()
+        print("[1] Tiere")
+        print("[2] deutsche Städte")
+        print("[3] Länder")
+        print("[4] Flüsse")
+        print("[5] Sportarten")
+        print("[6] Videospiele")
+        print("[7] Automarken")
+        print("[8] Informatik")
+        # print("[9] Zufällig")
+        print()
+
+        # Status des Galgenmänchens
+        hangman_status = [
+        # 0 Leben (Tod)
+        """
+        ------
+        |    |
+        |    O
+        |   /|\\
+        |   / \\
+        |
+        """,
+        # 1 Leben
+        """
+        ------
+        |    |
+        |    O
+        |   /|\\
+        |   / 
+        |
+        """,
+        # 2 Leben
+        """
+        ------
+        |    |
+        |    O
+        |   /|\\
+        |    
+        |
+        """,
+        # 3 Leben
+        """
+        ------
+        |    |
+        |    O
+        |   /|
+        |    
+        |
+        """,
+        # 4 Leben
+        """
+        ------
+        |    |
+        |    O
+        |    |
+        |    
+        |
+        """,
+        # 5 Leben
+        """
+        ------
+        |    |
+        |    O
+        |    
+        |    
+        |
+        """,
+        # 6 Leben (Startzustand)
+        """
+        ------
+        |    |
+        |    
+        |    
+        |    
+        |
+        """
+    ]
+        try:
+            category = int(input("mit welcher Kategorie möchtest du spielen?\n\n"))
+
+            if category == 1:   # Tiere
+                woerter_liste = ["Elefant", "Känguru", "Pinguin", "Schimpanse", "Krokodil", "Eichhörnchen", "Nashorn", "Libelle", "Schildkröte", "Hamster"]
+            elif category == 2: # deutsche Städte
+                woerter_liste = ["Berlin", "Hamburg", "München", "Frankfurt", "Stuttgart", "Dortmund", "Dresden", "Bremen", "Hannover", "Nürnberg"]
+            elif category == 3: # Länder
+                woerter_liste = ["Brasilien", "Frankreich", "Italien", "Kanada", "Japan", "Australien", "Ägypten", "Norwegen", "Mexiko", "Thailand"]
+            elif category == 4: # Flüsse
+                woerter_liste = ["Rhein", "Donau", "Elbe", "Main", "Neckar", "Mosel", "Weser", "Isar", "Spree", "Ems"]
+            elif category == 5: # Sportarten
+                woerter_liste = ["Fussball", "Basketball", "Tennis", "Volleyball", "Schwimmen", "Leichtathletik", "Handball", "Badminton", "Fechten", "Rudern"]
+            elif category == 6: # Videospiele
+                woerter_liste = ["Minecraft", "Tetris", "Pacman", "Fortnite", "Valorant", "Overwatch", "Eldenring", "Bloodborne", "Zelda", "Mario"]
+            elif category == 7: # Automarken
+                woerter_liste = ["Mercedes", "Porsche", "Volkswagen", "Ferrari", "Lamborghini", "Toyota", "Hyundai", "Renault", "Peugeot", "Mazda"]
+            elif category == 8: # Informatik
+                woerter_liste = ["Algorithmus", "Prozessor", "Datenbank", "Schnittstelle", "Programmierung", "Netzwerk", "Hardware", "Software", "Bit", "Byte"]
+            else:
+                print("Ungültige Auswahl. Wähle von 1 bis 8!\n")
+                continue
+        except ValueError:
+            print("Ungültige Eingabe! Es werden nur Zahlen akzeptiert!\n")
+            continue
+
+        # elif category == 9: # Zufällig
+        #     woerter_liste = random.randint(range(1, 8))
+
+        # speichert zufälliges wort aus woerter_liste
+        secret_word = random.choice(woerter_liste)
+        #print(secret_word)
+
+        # Ersetze die wörter durch "_"
+        display_word = len(secret_word) * ["_"]
+        
+        print(" ".join(display_word))
+        print()
+        guessed_letters = []
+        
+        # anzahl von Leben
+        lives = 6
+
+        while "_" in display_word and lives > 0:
+            
+            # einen Buchstaben raten
+            guess = input("Rate einen Buchstaben\n oder das ganze Wort\n wenn du dich traust:\n")
+
+            # Wenn Eingabe ein Buchstabe und Länge von eins ist
+            if guess.isalpha() and len(guess) == 1:
+                # Wenn Eingabe schonmal eingegeben wurde
+                if guess in guessed_letters:
+                    print("Dieser Buchstabe wurde schon erraten")
+                    continue # Überspringt restlichen Code und springt zum Schleifenanfang zurück 
+                else:
+                    guessed_letters.append(guess) # Wenn die Eingabe zum erstenmal vorkommt füge die eingabe zur liste hizu
+                    
+                    # Wenn eingabe in secret_word existiert...
+                    if guess.lower() in secret_word.lower():
+                        print("Dieser Buchstabe ist korrekt!")
+
+                        # durch secret_word iterieren
+                        for i in range(len(secret_word)):
+                            # wenn an stelle i Buchstabe von secret_word gleich eingabe ist, setze in display an der Stelle diesen Buchstaben
+                            if secret_word[i] == guess:
+                                display_word[i] = guess
+                        print(f"Leben: {lives}") # Anzeigen von übrigen Leben
+                        print(hangman_status[lives])
+                            
+                    else:
+                        print("Leider falsch geraten!")
+                        lives -= 1 # Bei falsch raten wird leben um eins reduziert
+                        print(f"Leben: {lives}\n") # Anzeigen von übrigen Leben
+                        print(hangman_status[lives])                        
+
+                print(" ".join(display_word)) # Ausgabe des secret_word wie es aktuell aussieht
+            
+            elif len(guess) > 1: # wenn guess/eingabe aus mehreren Buchstaben besteht
+                if guess.lower() == secret_word.lower():
+                    display_word = guess
+                    print(f"Leben: {lives}") # Anzeigen von übrigen Leben
+                    print(hangman_status[lives])
+                else:
+                    print("Leider falsch geraten!")
+                    lives -= 1 # Bei falsch raten wird leben um eins reduziert
+                    print(f"Leben: {lives}\n") # Anzeigen von übrigen Leben
+                    print(hangman_status[lives])
+
+            else:
+                print("Ich kann so nicht arbeiten!!!") 
+
+        if "".join(display_word) == secret_word.lower():
+            print("Glückwunsch, du hast das Wort rausgefunden\n")
+        else:
+            print(f"Schade. Du hast keine Leben mehr. Das gesuchte Wort war {secret_word}.\n")
+
+        play_again = input("Möchtest du noch eine Runde Spielen? (y/n): \n")
+
+        if play_again.lower() != "y":
+            print("--- Spiel beendet. Seite neu laden um erneut zu spielen. ---")
+            break
+        else:
+            play_again.lower() == "y"
+            print()
+            continue
+
+hangman()
