@@ -698,4 +698,3 @@ def hauptmenu():
         else:
             print("Ungültige Eingabe")
 hauptmenu()
-
